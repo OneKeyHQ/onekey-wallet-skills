@@ -1,0 +1,45 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate skill files and shared rules
+        run: |
+          set -euo pipefail
+
+          for file in \
+            skills/onekey-market/SKILL.md \
+            skills/onekey-security/SKILL.md \
+            skills/onekey-swap/SKILL.md \
+            skills/onekey-wallet/SKILL.md \
+            _shared/common.md; do
+            [ -s "$file" ]
+          done
+
+          for file in \
+            skills/onekey-market/SKILL.md \
+            skills/onekey-security/SKILL.md \
+            skills/onekey-swap/SKILL.md \
+            skills/onekey-wallet/SKILL.md; do
+            head -n 5 "$file" | grep -q '^---$'
+            head -n 5 "$file" | grep -q '^name:'
+          done
+
+  validate-marketplace-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate marketplace manifest JSON
+        run: python -m json.tool .claude-plugin/marketplace.json >/dev/null
