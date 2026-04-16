@@ -18,6 +18,11 @@ Use the `onekey` CLI schema output and skill files to understand the available c
 | `onekey-swap` | `skills/onekey-swap/` | Executing swaps, getting quotes, and following swap status |
 | `onekey-wallet` | `skills/onekey-wallet/` | Checking balances, sending assets, and managing wallets |
 
+## Authoring Conventions
+
+- Each `skills/<name>/SKILL.md` file should start with YAML frontmatter that includes `name`, `description`, `license`, and `metadata` (`author`, `version`, `homepage`).
+- Keep standalone skill docs free of monorepo-only paths like `apps/cli/...` and route cross-skill handoffs with the published `onekey-` skill names.
+
 ## Quick Start
 
 ```bash
