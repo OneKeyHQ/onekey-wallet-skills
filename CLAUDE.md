@@ -26,6 +26,7 @@ Use the `onekey` CLI schema output and skill files to understand the available c
 - Shared operator, safety, response, and cross-domain routing rules should live in `_shared/common.md` so later skill migrations inherit one canonical policy surface.
 - This standalone repo validates via shell checks plus `python -m json.tool` in `.github/workflows/validate.yml`; do not reintroduce local Node/TypeScript scaffolding unless CI requirements actually depend on it.
 - CI stays dependency-light: `.github/workflows/validate.yml` should validate skill/frontmatter presence with shell checks and validate `.claude-plugin/marketplace.json` with `python -m json.tool`.
+- If `main` is rebuilt as an orphan root commit during first publication, merge `main` back into the feature branch before opening a GitHub PR; GitHub rejects PR creation for unrelated histories.
 
 ## Quick Start
 
