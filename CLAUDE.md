@@ -24,6 +24,7 @@ Use the `onekey` CLI schema output and skill files to understand the available c
 - Keep standalone skill docs free of monorepo-only paths like `apps/cli/...` and route cross-skill handoffs with the published `onekey-` skill names.
 - Fund-moving skills should route audit prerequisites to `onekey-security`, while wallet and swap docs should route token research or pricing intents to `onekey-market`.
 - Shared operator, safety, response, and cross-domain routing rules should live in `_shared/common.md` so later skill migrations inherit one canonical policy surface.
+- This standalone repo validates via shell checks plus `python -m json.tool` in `.github/workflows/validate.yml`; do not reintroduce local Node/TypeScript scaffolding unless CI requirements actually depend on it.
 - CI stays dependency-light: `.github/workflows/validate.yml` should validate skill/frontmatter presence with shell checks and validate `.claude-plugin/marketplace.json` with `python -m json.tool`.
 
 ## Quick Start

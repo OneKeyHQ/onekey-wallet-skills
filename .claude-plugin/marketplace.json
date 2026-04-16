@@ -10,6 +10,7 @@
       "name": "onekey-wallet-skills",
       "source": "./",
       "version": "0.2.0",
+      "description": "4 OneKey wallet skills — onekey-wallet (balance, transfer, history), onekey-swap (quote, execute, status), onekey-market (search, price, trending, kline), and onekey-security (token audit, risk classification)",
       "license": "Apache-2.0",
       "category": "web3",
       "strict": false,
