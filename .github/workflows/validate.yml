@@ -22,7 +22,10 @@ jobs:
             skills/onekey-security/SKILL.md \
             skills/onekey-swap/SKILL.md \
             skills/onekey-wallet/SKILL.md \
-            _shared/common.md; do
+            skills/onekey-market/references/common.md \
+            skills/onekey-security/references/common.md \
+            skills/onekey-swap/references/common.md \
+            skills/onekey-wallet/references/common.md; do
             [ -s "$file" ]
           done
 
