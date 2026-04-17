@@ -2,17 +2,21 @@
 // @ts-check
 
 /**
- * Baseline verifier scaffold for skill install validation.
+ * Baseline verifier for skill install validation.
  *
- * This first iteration only normalizes CLI input and prints a stable
- * human-readable run summary. Report generation and execution hooks land in
- * later stories.
+ * The baseline flow stays dependency-light on purpose: it stages required
+ * platform artifacts inside an isolated temporary workspace, records one
+ * result per selected platform, writes a machine-readable report, and then
+ * cleans up the temporary context before exiting.
  */
 
+import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 
 /** @typedef {'claude' | 'cursor' | 'codex' | 'opencode' | 'openclaw'} Platform */
 /** @typedef {'baseline' | 'full'} VerificationMode */
+/** @typedef {'passed' | 'failed'} ResultStatus */
 
 /**
  * @typedef {object} CliOptions
@@ -22,12 +26,62 @@ import path from 'node:path';
  * @property {string[]} warnings
  */
 
+/**
+ * @typedef {object} BaselineResult
+ * @property {Platform} platform
+ * @property {ResultStatus} status
+ * @property {string[]} checkedFiles
+ * @property {string[]} missingFiles
+ * @property {string[]} messages
+ * @property {string} startedAt
+ * @property {string} finishedAt
+ */
+
+/**
+ * @typedef {object} IsolationState
+ * @property {boolean} enabled
+ * @property {string | null} workspacePath
+ * @property {'pending' | 'cleaned' | 'failed'} cleanupStatus
+ * @property {string | null} cleanupError
+ */
+
+/**
+ * @typedef {object} VerificationSummary
+ * @property {number} total
+ * @property {number} passed
+ * @property {number} failed
+ */
+
+/**
+ * @typedef {object} VerificationReport
+ * @property {number} schemaVersion
+ * @property {string} generatedAt
+ * @property {string} repoRoot
+ * @property {VerificationMode} requestedMode
+ * @property {'baseline'} executedMode
+ * @property {string[]} warnings
+ * @property {string} outputPath
+ * @property {IsolationState} isolation
+ * @property {VerificationSummary} summary
+ * @property {BaselineResult[]} results
+ */
+
 /** @type {readonly Platform[]} */
 const SUPPORTED_PLATFORMS = ['claude', 'cursor', 'codex', 'opencode', 'openclaw'];
 /** @type {readonly VerificationMode[]} */
 const SUPPORTED_MODES = ['baseline', 'full'];
 const DEFAULT_MODE = 'baseline';
 const DEFAULT_OUTPUT_PATH = 'reports/skill-install-verification.json';
+const ISOLATION_PREFIX = 'onekey-skill-install-verifier-';
+
+/** @type {Readonly<Record<Platform, readonly string[]>>} */
+const PLATFORM_BASELINE_FILES = {
+  claude: ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json'],
+  cursor: ['.cursor-plugin/plugin.json'],
+  codex: ['.codex/INSTALL.md'],
+  opencode: ['.opencode/opencode.json', '.opencode/INSTALL.md'],
+  openclaw: ['.openclaw/INSTALL.md'],
+};
 
 /**
  * @param {string[]} argv
@@ -181,7 +235,7 @@ function printHelp() {
 Options:
   -p, --platform <name[,name...]>  Limit execution to one or more platforms.
   -m, --mode <baseline|full>       Select verification mode.
-  -o, --output <path>              Report output path for later iterations.
+  -o, --output <path>              Report output path.
   -h, --help                       Show this help message.
 `);
 }
@@ -206,12 +260,244 @@ function printSummaryHeader(options) {
   }
 
   console.log('');
-  console.log('Scaffold only: execution and report writing are not enabled in this step.');
 }
 
-function main() {
+/**
+ * @param {CliOptions} options
+ * @returns {Promise<VerificationReport>}
+ */
+async function runVerification(options) {
+  const repoRoot = process.cwd();
+  const report = createEmptyReport(options, repoRoot);
+  const isolation = await createIsolationState();
+
+  report.isolation.workspacePath = isolation.workspacePath;
+
+  try {
+    if (options.mode === 'full') {
+      report.warnings.push('Full mode is not implemented yet; executed baseline checks instead.');
+    }
+
+    for (const platform of options.platforms) {
+      report.results.push(await runBaselineCheck(platform, repoRoot, isolation.workspacePath));
+    }
+
+    report.summary = summarizeResults(report.results);
+    report.generatedAt = new Date().toISOString();
+    return report;
+  } finally {
+    const cleanup = await cleanupIsolation(isolation.workspacePath);
+    report.isolation.cleanupStatus = cleanup.cleanupStatus;
+    report.isolation.cleanupError = cleanup.cleanupError;
+  }
+}
+
+/**
+ * @param {CliOptions} options
+ * @param {string} repoRoot
+ * @returns {VerificationReport}
+ */
+function createEmptyReport(options, repoRoot) {
+  return {
+    schemaVersion: 1,
+    generatedAt: '',
+    repoRoot,
+    requestedMode: options.mode,
+    executedMode: 'baseline',
+    warnings: [...options.warnings],
+    outputPath: options.outputPath,
+    isolation: {
+      enabled: true,
+      workspacePath: null,
+      cleanupStatus: 'pending',
+      cleanupError: null,
+    },
+    summary: {
+      total: 0,
+      passed: 0,
+      failed: 0,
+    },
+    results: [],
+  };
+}
+
+/**
+ * @returns {Promise<IsolationState>}
+ */
+async function createIsolationState() {
+  const workspacePath = await fs.mkdtemp(path.join(os.tmpdir(), ISOLATION_PREFIX));
+
+  return {
+    enabled: true,
+    workspacePath,
+    cleanupStatus: 'pending',
+    cleanupError: null,
+  };
+}
+
+/**
+ * @param {string | null} workspacePath
+ * @returns {Promise<Pick<IsolationState, 'cleanupStatus' | 'cleanupError'>>}
+ */
+async function cleanupIsolation(workspacePath) {
+  if (!workspacePath) {
+    return {
+      cleanupStatus: 'cleaned',
+      cleanupError: null,
+    };
+  }
+
+  try {
+    await fs.rm(workspacePath, { recursive: true, force: true });
+    return {
+      cleanupStatus: 'cleaned',
+      cleanupError: null,
+    };
+  } catch (error) {
+    return {
+      cleanupStatus: 'failed',
+      cleanupError: toErrorMessage(error),
+    };
+  }
+}
+
+/**
+ * @param {Platform} platform
+ * @param {string} repoRoot
+ * @param {string | null} workspacePath
+ * @returns {Promise<BaselineResult>}
+ */
+async function runBaselineCheck(platform, repoRoot, workspacePath) {
+  const startedAt = new Date().toISOString();
+  const requiredFiles = PLATFORM_BASELINE_FILES[platform];
+  /** @type {string[]} */
+  const checkedFiles = [];
+  /** @type {string[]} */
+  const missingFiles = [];
+
+  for (const relativeFile of requiredFiles) {
+    const sourcePath = path.join(repoRoot, relativeFile);
+    const exists = await pathExists(sourcePath);
+
+    if (!exists) {
+      missingFiles.push(relativeFile);
+      continue;
+    }
+
+    checkedFiles.push(relativeFile);
+
+    if (workspacePath) {
+      const stagedPath = path.join(workspacePath, platform, relativeFile);
+      await fs.mkdir(path.dirname(stagedPath), { recursive: true });
+      await fs.copyFile(sourcePath, stagedPath);
+    }
+  }
+
+  const status = missingFiles.length === 0 ? 'passed' : 'failed';
+  /** @type {string[]} */
+  const messages = [];
+
+  if (checkedFiles.length > 0) {
+    messages.push(`Staged ${checkedFiles.length} required file(s) in the isolated baseline workspace.`);
+  }
+
+  if (missingFiles.length > 0) {
+    messages.push(`Missing required file(s): ${missingFiles.join(', ')}`);
+  } else {
+    messages.push('All required baseline files were present.');
+  }
+
+  return {
+    platform,
+    status,
+    checkedFiles,
+    missingFiles,
+    messages,
+    startedAt,
+    finishedAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * @param {string} filePath
+ * @returns {Promise<boolean>}
+ */
+async function pathExists(filePath) {
+  try {
+    await fs.stat(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * @param {BaselineResult[]} results
+ * @returns {VerificationSummary}
+ */
+function summarizeResults(results) {
+  const passed = results.filter((result) => result.status === 'passed').length;
+  return {
+    total: results.length,
+    passed,
+    failed: results.length - passed,
+  };
+}
+
+/**
+ * @param {VerificationReport} report
+ * @returns {Promise<void>}
+ */
+async function writeReport(report) {
+  await fs.mkdir(path.dirname(report.outputPath), { recursive: true });
+  await fs.writeFile(report.outputPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+}
+
+/**
+ * @param {VerificationReport} report
+ */
+function printExecutionSummary(report) {
+  console.log(`Executed mode: ${report.executedMode}`);
+  console.log(`Isolated workspace: ${report.isolation.workspacePath ?? 'not created'}`);
+  console.log(`Results: ${report.summary.passed} passed, ${report.summary.failed} failed`);
+  console.log(`Report written to: ${report.outputPath}`);
+
+  if (report.warnings.length > 0) {
+    console.log('Report warnings:');
+    for (const warning of report.warnings) {
+      console.log(`- ${warning}`);
+    }
+  }
+
+  for (const result of report.results) {
+    console.log(`[${result.status.toUpperCase()}] ${result.platform}: ${result.messages.join(' ')}`);
+  }
+}
+
+/**
+ * @param {unknown} error
+ * @returns {string}
+ */
+function toErrorMessage(error) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
+}
+
+async function main() {
   const options = parseArgs(process.argv.slice(2));
   printSummaryHeader(options);
+  const report = await runVerification(options);
+  await writeReport(report);
+  printExecutionSummary(report);
+
+  if (report.summary.failed > 0 || report.isolation.cleanupStatus === 'failed') {
+    process.exitCode = 1;
+  }
 }
 
-main();
+main().catch((error) => {
+  console.error(`Verification failed: ${toErrorMessage(error)}`);
+  process.exit(1);
+});

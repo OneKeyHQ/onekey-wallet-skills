@@ -16,6 +16,9 @@ every agent environment.
 - `scripts/` — dependency-light automation entry points; prefer plain `.mjs`
   files with `// @ts-check` and Node standard library imports instead of
   adding package scaffolding.
+- Verifier-style scripts should stage repo artifacts inside `os.tmpdir()`
+  with `fs.mkdtemp`, write structured JSON reports for automation, and remove
+  temporary workspaces before exiting so local runs stay clean.
 - `.claude-plugin/marketplace.json` — Claude Code marketplace entry.
 - `.claude-plugin/plugin.json` — Claude Code plugin manifest.
 - `.github/workflows/validate.yml` — CI validation (shell checks + JSON
