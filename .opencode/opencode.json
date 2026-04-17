@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "skills/onekey-wallet/SKILL.md",
+    "skills/onekey-swap/SKILL.md",
+    "skills/onekey-market/SKILL.md",
+    "skills/onekey-security/SKILL.md"
+  ]
+}

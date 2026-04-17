@@ -1,35 +1,30 @@
-# OneKey Wallet — CLI Agent Skills
+# CLAUDE.md
 
-Use the `onekey` CLI schema output and skill files to understand the available commands.
+Guidance for Claude Code when working inside this repository.
 
-## Interface Discovery
+## Project overview
 
-- `onekey schema <cmd>`: exact JSON Schema for a command's input and output.
-- `onekey schema --list`: list all available commands.
-- `onekey schema --all`: dump the full command registry.
-- `onekey <cmd> --help`: inspect command-specific usage help.
+This is a **Claude Code plugin** — four OneKey wallet skills for on-chain
+operations. See `AGENTS.md` for the skill routing table and CLI interface
+discovery rules; that file is the canonical skill reference and applies to
+every agent environment.
 
-## Skills
+## Plugin structure
 
-| Skill | Path | Use When |
-| --- | --- | --- |
-| `onekey-market` | `skills/onekey-market/` | Researching tokens, price action, trends, and chart data |
-| `onekey-security` | `skills/onekey-security/` | Auditing token safety and reviewing transaction risk |
-| `onekey-swap` | `skills/onekey-swap/` | Executing swaps, getting quotes, and following swap status |
-| `onekey-wallet` | `skills/onekey-wallet/` | Checking balances, sending assets, and managing wallets |
+- `skills/` — four `SKILL.md` definitions (wallet, swap, market, security),
+  each with its own `references/common.md`.
+- `.claude-plugin/marketplace.json` — Claude Code marketplace entry.
+- `.claude-plugin/plugin.json` — Claude Code plugin manifest.
+- `.github/workflows/validate.yml` — CI validation (shell checks + JSON
+  validation, no Node/TS dependencies).
 
-## Authoring Conventions
+## Skill routing
 
-- Each `skills/<name>/SKILL.md` file should start with YAML frontmatter that includes `name`, `description`, `license`, and `metadata` (`author`, `version`, `homepage`).
-- Keep standalone skill docs free of monorepo-only paths like `apps/cli/...` and route cross-skill handoffs with the published `onekey-` skill names.
-- Fund-moving skills should route audit prerequisites to `onekey-security`, while wallet and swap docs should route token research or pricing intents to `onekey-market`.
-- Shared operator, safety, response, and cross-domain routing rules live in each skill's `references/common.md`; keep all four copies in sync when editing shared policy.
-- This standalone repo validates via shell checks plus `python -m json.tool` in `.github/workflows/validate.yml`; do not reintroduce local Node/TypeScript scaffolding unless CI requirements actually depend on it.
-- CI stays dependency-light: `.github/workflows/validate.yml` should validate skill/frontmatter presence with shell checks and validate `.claude-plugin/marketplace.json` with `python -m json.tool`.
-- If `main` is rebuilt as an orphan root commit during first publication, merge `main` back into the feature branch before opening a GitHub PR; GitHub rejects PR creation for unrelated histories.
+Use the skill table in `AGENTS.md`. When a user request could match more than
+one skill, honor the `Do NOT use for X` exclusions inside each skill's
+frontmatter `description`.
 
-## Quick Start
+## Contributing
 
-```bash
-onekey <command>
-```
+Authoring conventions, CI rules, and publishing notes live in
+`CONTRIBUTING.md`. Do not add them back to this file.

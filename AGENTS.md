@@ -1,35 +1,42 @@
-# OneKey Wallet — CLI Agent Skills
+# OneKey Wallet — Agent Skills
 
-Use the `onekey` CLI schema output and skill files to understand the available commands.
+Skill collection for AI coding assistants operating the OneKey wallet CLI.
+Four skills cover wallet operations, swap execution, market research, and
+security auditing.
 
-## Interface Discovery
+## Available skills
 
-- `onekey schema <cmd>`: exact JSON Schema for a command's input and output.
-- `onekey schema --list`: list all available commands.
-- `onekey schema --all`: dump the full command registry.
-- `onekey <cmd> --help`: inspect command-specific usage help.
-
-## Skills
-
-| Skill | Path | Use When |
+| Skill | Purpose | When to use |
 | --- | --- | --- |
-| `onekey-market` | `skills/onekey-market/` | Researching tokens, price action, trends, and chart data |
-| `onekey-security` | `skills/onekey-security/` | Auditing token safety and reviewing transaction risk |
-| `onekey-swap` | `skills/onekey-swap/` | Executing swaps, getting quotes, and following swap status |
-| `onekey-wallet` | `skills/onekey-wallet/` | Checking balances, sending assets, and managing wallets |
+| `onekey-wallet` | Wallet balances, transfers, history, import/logout | User checks balance, sends or withdraws assets, views transaction history, imports a wallet, or logs out |
+| `onekey-swap` | Swap quotes, execution, bridges, swap status | User wants to swap, trade, buy, sell, convert tokens, or bridge cross-chain |
+| `onekey-market` | Token prices, trending, K-line, liquidity, holders, research | User asks for token prices, trending tokens, search, K-line, liquidity, holders, or market research |
+| `onekey-security` | Token audits, transaction simulation, risk review | User asks for honeypot check, token audit, approval safety, or transaction simulation |
 
-## Authoring Conventions
+Each skill's `SKILL.md` defines domain rules, safety gates, and fast patterns.
+Each skill's `references/common.md` carries shared pre-flight, safety,
+scam-stop, chain-inference, and response-contract rules.
 
-- Each `skills/<name>/SKILL.md` file should start with YAML frontmatter that includes `name`, `description`, `license`, and `metadata` (`author`, `version`, `homepage`).
-- Keep standalone skill docs free of monorepo-only paths like `apps/cli/...` and route cross-skill handoffs with the published `onekey-` skill names.
-- Fund-moving skills should route audit prerequisites to `onekey-security`, while wallet and swap docs should route token research or pricing intents to `onekey-market`.
-- Shared operator, safety, response, and cross-domain routing rules live in each skill's `references/common.md`; keep all four copies in sync when editing shared policy.
-- This standalone repo validates via shell checks plus `python -m json.tool` in `.github/workflows/validate.yml`; do not reintroduce local Node/TypeScript scaffolding unless CI requirements actually depend on it.
-- CI stays dependency-light: `.github/workflows/validate.yml` should validate skill/frontmatter presence with shell checks and validate `.claude-plugin/marketplace.json` with `python -m json.tool`.
-- If `main` is rebuilt as an orphan root commit during first publication, merge `main` back into the feature branch before opening a GitHub PR; GitHub rejects PR creation for unrelated histories.
+## Interface discovery
 
-## Quick Start
+The `onekey` CLI is self-describing via JSON Schema — never guess parameters:
+
+- `onekey schema --list` — list all available commands.
+- `onekey schema <cmd>` — JSON Schema for a command's input and output.
+- `onekey schema --all` — full command registry.
+- `onekey <cmd> --help` — command-specific usage help.
+
+## Quick start
 
 ```bash
 onekey <command>
 ```
+
+If the binary is missing, the skill's `references/common.md` explains how to
+install via `npm install -g @onekeyfe/cli`.
+
+## Repository conventions
+
+Authoring and CI rules for maintainers live in `CONTRIBUTING.md`. Platform
+install instructions live in `README.md` and the per-platform directories
+(`.claude-plugin/`, `.cursor-plugin/`, `.opencode/`, `.codex/`, `.openclaw/`).
