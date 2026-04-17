@@ -13,6 +13,9 @@ every agent environment.
 
 - `skills/` — four `SKILL.md` definitions (wallet, swap, market, security),
   each with its own `references/common.md`.
+- `scripts/` — dependency-light automation entry points; prefer plain `.mjs`
+  files with `// @ts-check` and Node standard library imports instead of
+  adding package scaffolding.
 - `.claude-plugin/marketplace.json` — Claude Code marketplace entry.
 - `.claude-plugin/plugin.json` — Claude Code plugin manifest.
 - `.github/workflows/validate.yml` — CI validation (shell checks + JSON
