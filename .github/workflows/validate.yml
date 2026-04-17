@@ -38,11 +38,39 @@ jobs:
             head -n 5 "$file" | grep -q '^name:'
           done
 
-  validate-marketplace-json:
+  validate-repo-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate marketplace manifest JSON
-        run: python -m json.tool .claude-plugin/marketplace.json >/dev/null
+      - name: Validate top-level docs exist
+        run: |
+          set -euo pipefail
+          for file in AGENTS.md CLAUDE.md CONTRIBUTING.md README.md; do
+            [ -s "$file" ]
+          done
+
+  validate-plugin-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate plugin manifest JSON
+        run: |
+          set -euo pipefail
+          python -m json.tool .claude-plugin/marketplace.json >/dev/null
+          python -m json.tool .claude-plugin/plugin.json >/dev/null
+          python -m json.tool .cursor-plugin/plugin.json >/dev/null
+          python -m json.tool .opencode/opencode.json >/dev/null
+
+      - name: Validate platform install docs exist
+        run: |
+          set -euo pipefail
+          for file in \
+            .codex/INSTALL.md \
+            .opencode/INSTALL.md \
+            .openclaw/INSTALL.md; do
+            [ -s "$file" ]
+          done
