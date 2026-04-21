@@ -1,7 +1,7 @@
 {
   "name": "onekey-wallet-skills",
-  "description": "OneKey wallet skills for AI coding assistants — 4 skills covering wallet (balance, transfer, history), swap (quote, execute, status), market (search, price, trending, kline), and security (token audit, risk classification)",
-  "version": "0.2.0",
+  "description": "OneKey wallet skills for AI coding assistants — 5 skills covering wallet (balance, transfer, history), swap (quote, execute, status), market (search, price, trending, kline), security (token audit, risk classification), and hardware (device lifecycle, hardware login)",
+  "version": "0.3.0",
   "author": {
     "name": "OneKey"
   },
@@ -11,6 +11,7 @@
   "keywords": [
     "onekey",
     "wallet",
+    "hardware",
     "crypto",
     "defi",
     "swap",

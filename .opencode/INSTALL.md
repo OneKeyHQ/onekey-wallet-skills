@@ -33,8 +33,8 @@ symlink.
 ls -la ~/.config/opencode/skills/onekey-wallet-skills
 ```
 
-You should see four skill directories: `onekey-wallet`, `onekey-swap`,
-`onekey-market`, `onekey-security`.
+You should see five skill directories: `onekey-wallet`, `onekey-swap`,
+`onekey-market`, `onekey-security`, `onekey-hardware`.
 
 ## Available skills
 
@@ -44,6 +44,7 @@ You should see four skill directories: `onekey-wallet`, `onekey-swap`,
 | `onekey-swap` | Swap, trade, buy/sell, cross-chain bridge |
 | `onekey-market` | Token prices, trending, K-line, liquidity, holders |
 | `onekey-security` | Token audit, honeypot check, transaction simulation |
+| `onekey-hardware` | OneKey device lifecycle, `auth login --hardware`, PIN / passphrase toggles |
 
 ## Updating
 

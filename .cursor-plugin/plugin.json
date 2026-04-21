@@ -1,7 +1,7 @@
 {
   "name": "onekey-wallet-skills",
-  "description": "OneKey wallet skills for Cursor — 4 skills covering wallet operations, swap execution, market research, and security auditing",
-  "version": "0.2.0",
+  "description": "OneKey wallet skills for Cursor — 5 skills covering wallet operations, swap execution, market research, security auditing, and hardware device management",
+  "version": "0.3.0",
   "author": {
     "name": "OneKey"
   },
@@ -11,6 +11,7 @@
   "keywords": [
     "onekey",
     "wallet",
+    "hardware",
     "crypto",
     "defi",
     "swap",
