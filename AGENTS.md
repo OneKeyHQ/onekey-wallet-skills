@@ -1,8 +1,8 @@
 # OneKey Wallet — Agent Skills
 
 Skill collection for AI coding assistants operating the OneKey wallet CLI.
-Four skills cover wallet operations, swap execution, market research, and
-security auditing.
+Five skills cover wallet operations, swap execution, market research,
+security auditing, and hardware-device management.
 
 ## Available skills
 
@@ -12,6 +12,7 @@ security auditing.
 | `onekey-swap` | Swap quotes, execution, bridges, swap status | User wants to swap, trade, buy, sell, convert tokens, or bridge cross-chain |
 | `onekey-market` | Token prices, trending, K-line, liquidity, holders, research | User asks for token prices, trending tokens, search, K-line, liquidity, holders, or market research |
 | `onekey-security` | Token audits, transaction simulation, risk review | User asks for honeypot check, token audit, approval safety, or transaction simulation |
+| `onekey-hardware` | Hardware device lifecycle, `auth login --hardware`, PIN/passphrase toggles | User wants to connect or verify a OneKey device, change PIN, enable hidden wallets, check firmware, or log in with hardware |
 
 Each skill's `SKILL.md` defines domain rules, safety gates, and fast patterns.
 Each skill's `references/common.md` carries shared pre-flight, safety,

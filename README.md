@@ -1,8 +1,9 @@
 # onekey-wallet-skills
 
-OneKey wallet skills for AI coding assistants. Four skills covering wallet
-operations, swap execution, market research, and security auditing, designed
-to work across Claude Code, Cursor, Codex, OpenCode, and OpenClaw.
+OneKey wallet skills for AI coding assistants. Five skills covering wallet
+operations, swap execution, market research, security auditing, and hardware
+device management, designed to work across Claude Code, Cursor, Codex,
+OpenCode, and OpenClaw.
 
 ## Skills
 
@@ -12,6 +13,7 @@ to work across Claude Code, Cursor, Codex, OpenCode, and OpenClaw.
 | `onekey-swap` | `skills/onekey-swap/` | Swap quotes, execution, cross-chain bridges, swap status |
 | `onekey-market` | `skills/onekey-market/` | Token prices, trending, K-line, liquidity, holders, research |
 | `onekey-security` | `skills/onekey-security/` | Token audit, honeypot check, transaction simulation |
+| `onekey-hardware` | `skills/onekey-hardware/` | Hardware device lifecycle, `auth login --hardware`, PIN / passphrase toggles |
 
 `AGENTS.md` carries the canonical skill routing table and CLI interface
 discovery rules. `CLAUDE.md` is the Claude Code-specific entry point.
