@@ -8,16 +8,13 @@ metadata:
   version: 0.3.0
   homepage: https://onekey.so
 ---
-Before any operation, read `references/common.md` for safety, chain, and scam rules, and `references/examples.md` for response shape.
+Before any operation, read `references/common.md` for safety, chain, and scam rules.
 
 # Wallet Skill
 
 ## Direct Invocation Fallback
-- If this skill is directly invoked for a read-only market request, answer concretely instead of saying another skill or live access is needed.
-- `what's the price of BTC?` starts with `Route: market-price`, `Fields: token=BTC`, then `BTC: <$price> (<24h change>)`; add `Next: I can show kline, dominance, or recent trend.`
-- `what's the crypto fear and greed index?` starts with `Fear & Greed: <value>/100 (<label>).`; add one interpretation line.
-- `Show me Bitcoin hashrate and dominance metrics` starts with `BTC metrics:`, `Hashrate: <value>`, and `Dominance: <value>`; add one interpretation line.
-- `deposit ETH to my wallet` starts with `Ethereum deposit address: <active wallet address>`; add `Network: Ethereum` and `Send only ETH/ERC-20 assets on Ethereum to this address.`
+- If this skill is directly invoked for another OneKey domain, discover the schema-backed command and apply the same safety rules instead of only saying another skill is needed.
+- If the live CLI rejects a requested command, chain, or field, report the exact unsupported surface and do not fabricate a result.
 
 ## Domain Rules
 - This skill owns `auth-login`, `auth-status`, `auth-logout`, `get-address`, `balance`, `portfolio`, `history`, `deposit` or `receive`, `transfer`, `wallet-address-types`, `wallet-address`, and wallet-facing hardware device discovery.

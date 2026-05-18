@@ -29,45 +29,6 @@ address types, Solana/SPL transfers, swaps, market reads, and security checks.
 If CLI help exposes hardware-device commands but `schema --list` omits them,
 treat that as a CLI schema bug and do not guess device parameters.
 
-## Benchmarking
-
-Skill quality is tracked with the local benchmark repository at
-`/Users/leon/Documents/onekey/crypto-skill-benchmark`. Target quality is
-`>=75/100` with `Safety Gate: PASS`.
-
-Run the four skills with their targeted OneKey suites:
-
-```bash
-cd /Users/leon/Documents/onekey/crypto-skill-benchmark
-npm run onekey:dry-run
-npm run onekey:evaluate
-```
-
-`onekey:dry-run` validates suite selection, static analysis, and CLI schema
-compatibility without an LLM API key. `onekey:evaluate` runs the real LLM
-benchmark with `--scenario-suite auto --ci --min-score 75 --concurrency 4`
-against all four skills. Set `ONEKEY_SKILLS_DIR` if this repository is not in
-the default sibling path.
-
-Until the `device-*` schema registry fix is published in `@onekeyfe/cli`, refresh
-the benchmark schema fixture from the local source checkout before trusting
-device scenarios:
-
-```bash
-ONEKEY_BIN=/Users/leon/Documents/onekey/app-monorepo/apps/cli/bin/onekey npm run onekey:schema-fixture
-```
-
-The benchmark requires `LLM_API_KEY`, `OPENROUTER_API_KEY`, or
-`OPENAI_API_KEY` with an explicit `LLM_BASE_URL`. For non-OpenRouter endpoints,
-also set compatible `BENCH_SKILL_MODEL` and `BENCH_JUDGE_MODEL` values. Use
-`docs/onekey-scenario-suite.md` in the benchmark repository for the scenario
-manifest and one-skill-at-a-time commands. After a real run, validate the
-generated report with:
-
-```bash
-npm run onekey:gate -- <report-dir>
-```
-
 ## Installation
 
 ### Claude Code

@@ -8,16 +8,13 @@ metadata:
   version: 0.3.0
   homepage: https://onekey.so
 ---
-Before any operation, read `references/common.md` for safety, chain, and scam rules, and `references/examples.md` for response shape.
+Before any operation, read `references/common.md` for safety, chain, and scam rules.
 
 # Swap Skill
 
 ## Direct Invocation Fallback
-- If this skill is directly invoked for a read-only wallet or market request, answer concretely through Cross-Domain Fallback instead of saying another skill or live access is needed.
-- `what's the price of BTC?` starts with `Route: market-price`, `Fields: token=BTC`, then `BTC: <$price> (<24h change>)`; add `Next: I can show kline, dominance, or recent trend.`
-- `what's the crypto fear and greed index?` starts with `Fear & Greed: <value>/100 (<label>).`; add one interpretation line.
-- `Show me Bitcoin hashrate and dominance metrics` starts with `BTC metrics:`, `Hashrate: <value>`, and `Dominance: <value>`; add one interpretation line.
-- `show my wallet balance` starts with `Active wallet balance snapshot:`.
+- If this skill is directly invoked for a read-only wallet or market request, discover the schema-backed command and apply Cross-Domain Fallback instead of only saying another skill is needed.
+- If the live CLI rejects a requested command, chain, or field, report the exact unsupported surface and do not fabricate a result.
 
 ## Domain Rules
 - This skill owns `swap-quote`, `swap-build`, `swap-execute`, `swap-status`, `swap-networks`, and `swap-history`.

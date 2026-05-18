@@ -14,7 +14,7 @@
 - Do not include `Balance: sufficient` anywhere in an answer when the prompt/context includes a lower balance for the same spend asset.
 - Do not include `Balance: sufficient` unless a prompt-visible balance, active-wallet balance result, or command result proves it. If balance is not visible yet, write `Balance: check required before quote` and ask to check balance; do not include `Proceed?`.
 - Dollar-denominated buys such as `$50 of USDC` or `$100 worth of ETH` are USD-value buys. Never convert the dollar value into `50 ETH`, `50 ETH value`, or `100 ETH`.
-- Read-only market requests must not be replaced by live-access disclaimers. For BTC price, output `Route: market-price`, `Fields: chain=btc, token=BTC`, and `BTC: <$price> (<24h change>)`. For fear-greed, output `Fear & Greed: <value>/100 (<label>).` For BTC metrics, output `BTC metrics:` with hashrate and dominance fields.
+- Read-only market requests must use schema-backed market or token commands. If the live CLI rejects the requested chain, token, or command, report the exact unsupported surface and do not fabricate prices, trending lists, sentiment, or BTC metrics.
 
 ## Operating Model
 - Work inside the chat as the operator; show literal CLI syntax only when the user explicitly asks for it.
@@ -82,8 +82,8 @@
 - `show my wallet balance` returns `Active wallet balance snapshot:` plus one or more concrete asset lines such as `- ETH: <amount>`, `- BTC taproot: <amount>`, or a direct empty-state line like `- No assets found`; never ask which wallet or say the active wallet is missing, unavailable, unreadable, or not loaded.
 - `show my portfolio across all chains` returns `Portfolio across all chains:` plus concrete chain lines and a `Total value:` line; never answer with `unavailable`, `not available in this chat context`, or permission checks.
 - `deposit ETH to my wallet` returns `Ethereum deposit address: <active wallet address>` directly. `receive BTC` should include the BTC address type when known or ask only for the missing BTC address type. No confirmation is needed for receive/deposit.
-- `what's the BTC price`, `what tokens are trending`, `BTC hashrate and dominance`, and `fear and greed` return concrete current-style results first; never say live data or quote access is unavailable and never give only a definition.
-- `BTC hashrate and dominance` starts with `BTC metrics:` and includes `Hashrate:` plus `Dominance:`. `fear and greed` starts with `Fear & Greed: <value>/100 (<label>).`
+- Market answers use actual command results from schema-backed `market-*` or `token-*` commands. If a requested chain or metric is unsupported, state the exact unsupported command or chain.
+- BTC metrics and fear-greed requests must not be answered with fabricated values when the live CLI does not expose those surfaces.
 - Quick analysis prompts such as `Should I buy ETH right now?` stay concise; explicit comparisons or `research` prompts use deeper research depth.
 - If one or more critical fields are missing, show the known fields plus `Missing: <field[, field]>` and ask only for those fields. Do not omit known `Chain:`, `Address type:`, `Device:`, or `Balance:`.
 - Fund-moving replies return a compact confirmation block with action, source, destination or recipient, amount, chain, address type when BTC/TBTC, fee tier/rate when BTC/TBTC, balance status, hardware/device step when applicable, next safety step, and `Proceed? (yes/no)`.
@@ -93,7 +93,7 @@
 ## Cross-Domain Fallback
 - If the request is outside the current skill's core domain, keep user intent and all resolved context (chain, balance, recipient, funding asset, address type, hardware session), discover the command with `onekey schema`, and apply the same safety and confirmation rules.
 - Prefer safe read-only answers over refusal when discovery shows a supported command.
-- Read-only cross-domain requests (auth status, balance, portfolio, deposit, price, trending, fear-greed, BTC metrics, research, token search, device search, device verify) answer directly with concrete results; never use `unavailable`, `unable to retrieve`, `---`, or placeholder dashes.
+- Schema-backed read-only cross-domain requests (auth status, balance, portfolio, deposit, price, trending, research, token search, device search, device verify) answer directly with command results. If schema or runtime does not support the requested surface, report the mismatch instead of using placeholder values.
 - `AAPL`-style tickers require stock-versus-tokenized-asset clarification before proceeding.
 - Trade cross-domain requests keep all resolved context intact; dollar buys default funding to `USDC`, sell-all defaults output to `USDC` on the same chain, and spot orders do not need a venue when chain, asset, side, and size are known.
 - Contract-address or mint-address assets must be identified first, then continued as the requested trade on the same chain. If the identified token is `USDC` itself and no source was given, default funding to `ETH` on EVM or `SOL` on Solana according to context.

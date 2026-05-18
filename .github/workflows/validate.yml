@@ -25,11 +25,7 @@ jobs:
             skills/onekey-market/references/common.md \
             skills/onekey-security/references/common.md \
             skills/onekey-swap/references/common.md \
-            skills/onekey-wallet/references/common.md \
-            skills/onekey-market/references/examples.md \
-            skills/onekey-security/references/examples.md \
-            skills/onekey-swap/references/examples.md \
-            skills/onekey-wallet/references/examples.md; do
+            skills/onekey-wallet/references/common.md; do
             [ -s "$file" ]
           done
 
@@ -41,16 +37,11 @@ jobs:
             head -n 5 "$file" | grep -q '^---$'
             head -n 5 "$file" | grep -q '^name:'
             grep -q 'references/common.md' "$file"
-            grep -q 'references/examples.md' "$file"
           done
 
           cmp -s skills/onekey-wallet/references/common.md skills/onekey-swap/references/common.md
           cmp -s skills/onekey-wallet/references/common.md skills/onekey-market/references/common.md
           cmp -s skills/onekey-wallet/references/common.md skills/onekey-security/references/common.md
-
-          cmp -s skills/onekey-wallet/references/examples.md skills/onekey-swap/references/examples.md
-          cmp -s skills/onekey-wallet/references/examples.md skills/onekey-market/references/examples.md
-          cmp -s skills/onekey-wallet/references/examples.md skills/onekey-security/references/examples.md
 
           common=skills/onekey-wallet/references/common.md
           for pattern in \
@@ -75,34 +66,12 @@ jobs:
             grep -Fq -- "$pattern" "$common"
           done
 
-          examples=skills/onekey-wallet/references/examples.md
-          for pattern in \
-            'Route: auth-login' \
-            'Route: wallet-address' \
-            'using App Transport' \
-            'Fields: appTransfer=true' \
-            'passphraseMode=on_device' \
-            'Device authenticity verification:' \
-            'Route: device-toggle-passphrase' \
-            'Route: device-change-pin' \
-            'Route: device-settings' \
-            'Device security confirmation:' \
-            'Route: device-verify blocked until schema is available' \
-            'Fields: chain=btc, asset=BTC, amount=0.01, addressType=taproot' \
-            'Execute fields after confirmation: order=<orderId>, fromAddressType=taproot, signOnly=true' \
-            'Route context: sourceChain=sol, destinationChain=eth' \
-            'Route: token-trending' \
-            'Route: no EVM security-audit for Solana mint unless schema exposes Solana audit'; do
-            grep -Fq -- "$pattern" "$examples"
-          done
-
           grep -Fq 'App Transfer/App Transport Bot Wallet' skills/onekey-wallet/SKILL.md
           grep -Fq 'hardware wallet' skills/onekey-wallet/SKILL.md
           grep -Fq 'BTC/Solana addresses' skills/onekey-wallet/SKILL.md
           grep -Fq 'sign a BTC PSBT' skills/onekey-swap/SKILL.md
           grep -Fq 'swap SOL/SPL' skills/onekey-swap/SKILL.md
           grep -Fq 'BTC metrics' skills/onekey-market/SKILL.md
-          grep -Fq 'Solana/SPL token info' skills/onekey-market/SKILL.md
           grep -Fq 'App Transfer/App Transport Bot Wallet secret safety' skills/onekey-security/SKILL.md
           grep -Fq 'hardware wallet safety' skills/onekey-security/SKILL.md
 

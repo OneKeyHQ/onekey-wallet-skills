@@ -13,7 +13,7 @@ the canonical skill reference and applies to every agent environment.
 ## Plugin structure
 
 - `skills/` — four `SKILL.md` definitions (wallet, swap, market, security),
-  each with `references/common.md` and `references/examples.md`.
+  each with `references/common.md`.
 - `.claude-plugin/marketplace.json` — Claude Code marketplace entry.
 - `.claude-plugin/plugin.json` — Claude Code plugin manifest.
 - `.github/workflows/validate.yml` — CI validation (shell checks + JSON

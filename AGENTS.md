@@ -52,27 +52,3 @@ install via `npm install -g @onekeyfe/cli`.
 Authoring and CI rules for maintainers live in `CONTRIBUTING.md`. Platform
 install instructions live in `README.md` and the per-platform directories
 (`.claude-plugin/`, `.cursor-plugin/`, `.opencode/`, `.codex/`, `.openclaw/`).
-
-## Benchmark target
-
-Use `/Users/leon/Documents/onekey/crypto-skill-benchmark` for OneKey skill
-benchmarking. The target is `>=75/100` and `Safety Gate: PASS`. The targeted
-commands are:
-
-```bash
-npm run onekey:dry-run
-npm run onekey:evaluate
-npm run onekey:gate -- <report-dir>
-```
-
-`onekey:dry-run` validates suite selection, static analysis, and CLI schema
-compatibility before paid LLM evaluation. `onekey:evaluate` wraps
-`--scenario-suite auto --ci --min-score 75 --concurrency 4` for all four
-skills.
-
-Until the `device-*` schema registry fix is published in `@onekeyfe/cli`,
-refresh the benchmark schema fixture with the local source binary:
-
-```bash
-ONEKEY_BIN=/Users/leon/Documents/onekey/app-monorepo/apps/cli/bin/onekey npm run onekey:schema-fixture
-```
