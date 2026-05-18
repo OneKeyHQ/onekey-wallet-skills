@@ -31,12 +31,12 @@ Current schema-backed command families include core status/session commands
 (`version`, `status`, `logout`), auth (`auth-login`, `auth-status`,
 `auth-logout`), wallet (`balance`, `history`, `get-address`,
 `wallet-address-types`, `wallet-address`, `transfer`), swap, market, token,
-and security commands. OneKey CLI `0.1.0-alpha.6` help exposes hardware-device
-commands under `onekey device`, but published `schema --list` may omit them; if
-that happens, treat it as a CLI schema bug and do not guess device parameters.
-After the registry fix is present, expected device schema names are
-`device-search`, `device-verify`, `device-settings`,
-`device-toggle-passphrase`, and `device-change-pin`.
+and security commands. If `onekey schema --list` omits a command that
+`onekey --help` exposes (e.g. hardware-device commands under `onekey device`),
+treat it as a CLI schema gap and do not guess device parameters. When schema
+support is available, expected device schema names are `device-search`,
+`device-verify`, `device-settings`, `device-toggle-passphrase`, and
+`device-change-pin`.
 
 ## Quick start
 

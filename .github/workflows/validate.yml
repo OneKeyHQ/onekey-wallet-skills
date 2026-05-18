@@ -55,7 +55,7 @@ jobs:
             'hardware' \
             'passphraseMode' \
             'device-search' \
-            'schema bug' \
+            'schema gap' \
             'addressType' \
             'fromAddressType' \
             'signOnly' \

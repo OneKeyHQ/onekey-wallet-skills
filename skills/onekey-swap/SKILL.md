@@ -1,6 +1,6 @@
 ---
 name: onekey-swap
-description: "Use when the user asks to swap tokens, trade ETH for USDC, buy tokens, sell tokens, exchange crypto, get a swap quote, check swap status, perform a cross-chain swap or bridge, swap SOL/SPL, swap BTC/TBTC, sign a BTC PSBT, 换币, 买币, 卖币, 兑换, 交易, or 跨链. Prefer onekey-market/onekey-security when a router is available; if directly invoked, handle those intents through Cross-Domain Fallback."
+description: "Use when the user asks to swap tokens, trade ETH for USDC, buy tokens, sell tokens, exchange crypto, get a swap quote, check swap status, perform a cross-chain swap or bridge, swap SOL/SPL, swap BTC/TBTC, sign a BTC PSBT, 换币, 买币, 卖币, 兑换, 交易, or 跨链. Do NOT use for token research or prices — use onekey-market. Do NOT use for security audits — use onekey-security. Do NOT use for wallet balances or transfers — use onekey-wallet."
 version: 0.3.0
 license: Apache-2.0
 metadata:

@@ -3,9 +3,8 @@
 - Once per session, compare local `onekey version` with `npm view @onekeyfe/cli version --json`. If local is behind the published version, update with `npm install -g @onekeyfe/cli` and continue only after it succeeds.
 - Start every new operation family with `onekey schema --list`, then inspect the exact command with `onekey schema <command>`. Never guess parameter names, networks, address-type fields, output fields, or command support.
 - The current stable schema-backed command names include `version`, `status`, `logout`, `auth-login`, `auth-status`, `auth-logout`, `get-address`, `balance`, `history`, `transfer`, `sign`, `wallet-address-types`, `wallet-address`, `swap-quote`, `swap-build`, `swap-execute`, `swap-status`, `swap-networks`, `swap-history`, `token-search`, `token-info`, `token-price`, `token-trending`, `token-trades`, `token-liquidity`, `market-price`, `market-prices`, `market-kline`, `security-audit`, and `security-simulate`.
-- OneKey CLI `0.1.0-alpha.6` help exposes hardware device commands under `onekey device`, but published `schema --list` may omit them. Treat that as a CLI schema bug, not as permission to guess parameters.
-- After the schema registry fix is present, the expected device schema command names are `device-search`, `device-verify`, `device-settings`, `device-toggle-passphrase`, and `device-change-pin`.
-- If the live `schema --list` is missing a command that CLI help exposes, surface the mismatch and use only schema-backed commands until the schema registry is fixed.
+- If `onekey schema --list` omits a command that `onekey --help` exposes (e.g. hardware-device commands under `onekey device`), treat it as a CLI schema gap and use only schema-backed commands; do not guess parameters.
+- When schema-backed device commands are available, expected names are `device-search`, `device-verify`, `device-settings`, `device-toggle-passphrase`, and `device-change-pin`.
 - Do not auto-reinstall after normal command failures; surface the exact error and inspect schema or runtime state instead.
 
 ## Hard Stops
