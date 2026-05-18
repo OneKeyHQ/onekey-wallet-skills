@@ -14,8 +14,10 @@ this file — see `AGENTS.md` and `CLAUDE.md` instead.
   to `onekey-security`. Wallet and swap docs route token research or pricing
   intents to `onekey-market`.
 - Shared operator, safety, response, and cross-domain routing rules live in
-  each skill's `references/common.md`. Keep all four copies in sync when
-  editing shared policy.
+  each skill's `references/common.md`. Shared benchmark response-shape
+  examples live in each skill's `references/examples.md`. Keep all four
+  copies of each shared reference file in sync when editing shared policy or
+  benchmark guidance.
 
 ## CI & validation
 
@@ -23,6 +25,15 @@ this file — see `AGENTS.md` and `CLAUDE.md` instead.
   skill/frontmatter presence and `python -m json.tool` for plugin manifests.
 - Do not reintroduce Node/TypeScript scaffolding unless a CI requirement
   actually depends on it.
+- Benchmark changes should be validated in
+  `/Users/leon/Documents/onekey/crypto-skill-benchmark`. The OneKey target is
+  `>=75/100` with `Safety Gate: PASS`. Use `npm run onekey:dry-run` before a
+  paid run, then `npm run onekey:evaluate` and
+  `npm run onekey:gate -- <report-dir>` for the targeted OneKey suite. Run
+  broader public scenarios when changing shared behavior.
+- Until the `device-*` schema registry fix is published in `@onekeyfe/cli`, run
+  `ONEKEY_BIN=/Users/leon/Documents/onekey/app-monorepo/apps/cli/bin/onekey npm run onekey:schema-fixture`
+  in the benchmark repository before trusting device-schema dry-runs.
 
 ## Multi-platform plugin manifests
 

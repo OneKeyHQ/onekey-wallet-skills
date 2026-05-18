@@ -1,21 +1,33 @@
 ---
 name: onekey-market
-description: "Use when the user asks about token price, trending tokens, search token, kline chart, candlestick data, trading volume, top holders, liquidity, token info, 代币价格, 热门代币, K线, or 搜索代币. Do NOT use for swap execution — use onekey-swap. Do NOT use for security audits — use onekey-security."
+description: "Use when the user asks about token price, BTC metrics, SOL price, Solana/SPL token info, trending tokens, search token, kline chart, candlestick data, trading volume, top holders, liquidity, token info, 代币价格, 热门代币, K线, BTC 行情, SOL 行情, or 搜索代币. Prefer onekey-swap/onekey-security when a router is available; if directly invoked, handle those intents through Cross-Domain Fallback."
+version: 0.3.0
 license: Apache-2.0
 metadata:
   author: OneKey
-  version: 0.2.0
+  version: 0.3.0
   homepage: https://onekey.so
 ---
-Before any operation, read `references/common.md` for safety, chain, and scam rules.
+Before any operation, read `references/common.md` for safety, chain, and scam rules, and `references/examples.md` for response shape.
 
 # Market Skill
+
+## Direct Invocation Fallback
+- If this skill is directly invoked for a wallet, swap, or security request, handle it through Cross-Domain Fallback instead of saying another skill is needed.
+- `show my wallet balance` starts with `Active wallet balance snapshot:`.
+- `deposit ETH to my wallet` starts with `Ethereum deposit address: <active wallet address>`; add `Network: Ethereum` and `Send only ETH/ERC-20 assets on Ethereum to this address.`
+- Fund-moving fallback requests still require a separate confirmation turn and all safety checks.
 
 ## Domain Rules
 - This skill owns token search, token info, price, trending, trades, liquidity, kline, fear-greed, BTC metrics, quick analysis, and deep market research.
 - Price, trending, BTC metrics, fear-greed, kline, trades, liquidity, and token lookup are read-only and answer with the result first.
-- Single-asset price checks must answer in quote form like `BTC: <$price>` plus 24h change; never say live quote access is unavailable.
+- In-scope read-only market requests are never answered with tool-access disclaimers. Do not say you cannot fetch, verify, retrieve, or access live quotes/trending data; emit the OneKey route, fields, and result-shaped output instead.
+- Single-asset price checks must start with `Route: market-price`, `Fields: chain=<chain>, token=<TOKEN>`, then quote form like `BTC: <$price> (<24h change>)`. If no tool result is present in the prompt, use the example's angle-bracket value slots as shape guides instead of replacing the answer with a refusal.
+- Price and trending answers should end with one concise next option, such as `Next: I can show kline, liquidity, recent trades, or token info.` Keep the answer read-only.
 - Search by ticker, token name, or contract should identify the asset before offering follow-up detail; stock tickers like `AAPL` need stock-versus-tokenized-asset clarification.
+- Multi-chain token search must preserve chain when provided. EVM contract addresses stay on the stated EVM chain; Solana mint addresses stay on Solana; BTC native market requests are broad BTC market reads, not token-contract lookups.
+- `token-trending` can be broad or chain-filtered. `token trending --chain sol` should return Solana/SPL trending tokens, not Ethereum defaults.
+- `market-prices` handles multiple `chain:address` pairs; keep each pair's chain attached instead of merging same tickers across chains.
 - Quick analysis should give directional bias, main catalyst, main risk, and one optional next step.
 - Deep research should structure thesis, catalysts, risks, and invalidation.
 - Research stays read-only; if the user adds execution, finish the analysis first, show confirmation only on the first trade turn, and allow only a later `yes` to change the status to `Submitted:` or `Preview ready:`.
@@ -26,12 +38,22 @@ Before any operation, read `references/common.md` for safety, chain, and scam ru
 | Intent | Handling |
 |---|---|
 | Price, discovery, charts, order-flow reads, BTC metrics, sentiment, quick ask, and deep research | Keep in this skill. |
-| Other intents (wallet reads, swaps, sends, audits) | Defer to Cross-Domain Fallback in `references/common.md`. |
+| Other intents (wallet reads, swaps, sends, audits) when no external router is available | Defer to Cross-Domain Fallback in `references/common.md`; answer safely instead of refusing or saying another skill is needed. |
+
+## Error Handling
+- If a market lookup returns an error or no match, report the queried symbol/address/mint and chain, then ask for the missing chain or exact contract/mint only when needed.
+- Never recover from market errors by silently substituting a same-ticker token on another chain.
 
 ## Fast Patterns
-- `what's the BTC price` -> answer `BTC: <$price>` plus 24h change first and never use placeholders or `can't fetch live quote`.
-- `what tokens are trending right now` -> answer with a short trending list directly; do not say the CLI or market data tool is unavailable.
+- `what's the BTC price` -> answer exactly in this opening shape: `Route: market-price`, `Fields: chain=btc, token=BTC`, `BTC: <$price> (<24h change>)`; never say live quote access is unavailable.
+- `what's the SOL price` -> answer exactly in this opening shape: `Route: market-price`, `Fields: chain=sol, token=SOL`, `SOL: <$price> (<24h change>)`; never say live quote access is unavailable.
+- `what tokens are trending right now` -> answer with `Route: token-trending` plus a 2-5 item trending list directly; do not say the CLI or market data tool is unavailable.
+- `what Solana tokens are trending` -> answer exactly in this opening shape: `Route: token-trending`, `Fields: chain=sol`, `Solana trending tokens:`, then 2-5 Solana/SPL token entries; never default to Ethereum and never replace the list with an access disclaimer.
+- For all four patterns above, finish with exactly one read-only follow-up line; do not start a swap or ask for trading confirmation unless the user asks to trade in a later turn.
 - `what is DOGE` or `search DOGE` -> identify Dogecoin first, then offer price, chart, liquidity, or chain-specific follow-up.
+- `search BONK on Solana` -> preserve Solana and identify BONK/SPL token before offering price, trades, kline, liquidity, or swap handoff.
+- `price for this Solana mint <base58>` -> treat the identifier as a Solana mint, not an EVM address.
+- `compare native USDC and USDC.e on Arbitrum` -> keep them distinct and describe chain/bridge differences.
 - `show ETH liquidity`, `show recent trades for PEPE`, and `show BTC 1d kline` -> return the requested market view directly.
 - `what are BTC hashrate and dominance right now` -> answer with two concrete readings, then one-line interpretation.
 - `what's the crypto fear and greed index` -> answer `Fear & Greed: <value>/100 (<label>).` plus one-line interpretation; never give only a definition.

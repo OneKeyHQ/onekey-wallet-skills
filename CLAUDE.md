@@ -5,14 +5,15 @@ Guidance for Claude Code when working inside this repository.
 ## Project overview
 
 This is a **Claude Code plugin** — four OneKey wallet skills for on-chain
-operations. See `AGENTS.md` for the skill routing table and CLI interface
-discovery rules; that file is the canonical skill reference and applies to
-every agent environment.
+operations, App Transfer/App Transport Bot Wallet login, hardware wallet sessions, BTC and
+Solana support, swaps, market research, and security review. See `AGENTS.md`
+for the skill routing table and CLI interface discovery rules; that file is
+the canonical skill reference and applies to every agent environment.
 
 ## Plugin structure
 
 - `skills/` — four `SKILL.md` definitions (wallet, swap, market, security),
-  each with its own `references/common.md`.
+  each with `references/common.md` and `references/examples.md`.
 - `.claude-plugin/marketplace.json` — Claude Code marketplace entry.
 - `.claude-plugin/plugin.json` — Claude Code plugin manifest.
 - `.github/workflows/validate.yml` — CI validation (shell checks + JSON
