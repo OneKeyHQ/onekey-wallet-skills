@@ -24,7 +24,7 @@ Before any operation, read `references/common.md` for safety, chain, and scam ru
 - Cross-chain requests must preserve source chain, destination chain, and bridge intent; never silently collapse a bridge into a same-chain swap.
 - Solana swaps are supported for SOL and SPL tokens. Preserve Solana chain context and SPL mint addresses; do not convert them to EVM addresses.
 - BTC swaps are supported for native BTC. Preserve `fromAddressType` and `toAddressType` when provided; if a required BTC address type is missing, ask only for the missing address type.
-- BTC `swap-execute` supports `signOnly`; a sign-only PSBT response is `Preview ready:` or `Signed:` style output, not a broadcasted `Submitted:` swap.
+- BTC `swap-execute` supports `signOnly`; a sign-only PSBT response is `Preview ready:` style output, not a broadcasted `Submitted:` swap.
 - `swap-networks --bridge` is the discovery path for cross-chain support. Do not invent a bridge network if discovery does not list it.
 - Exact-amount approvals are preferred; unlimited approvals need a separate warning and should stay separate from the trade.
 - BTC and Solana swaps do not use ERC-20 approval. Do not warn about EVM allowances for BTC native or SOL native routes unless the route actually includes an EVM token approval.

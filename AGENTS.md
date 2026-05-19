@@ -27,16 +27,9 @@ The `onekey` CLI is self-describing via JSON Schema — never guess parameters:
 - `onekey schema --all` — full command registry.
 - `onekey <cmd> --help` — command-specific usage help.
 
-Current schema-backed command families include core status/session commands
-(`version`, `status`, `logout`), auth (`auth-login`, `auth-status`,
-`auth-logout`), wallet (`balance`, `history`, `get-address`,
-`wallet-address-types`, `wallet-address`, `transfer`), swap, market, token,
-and security commands. If `onekey schema --list` omits a command that
-`onekey --help` exposes (e.g. hardware-device commands under `onekey device`),
-treat it as a CLI schema gap and do not guess device parameters. When schema
-support is available, expected device schema names are `device-search`,
-`device-verify`, `device-settings`, `device-toggle-passphrase`, and
-`device-change-pin`.
+If `onekey schema --list` omits a command that `onekey --help` exposes
+(e.g. hardware-device commands under `onekey device`), treat it as a CLI
+schema gap and do not guess device parameters.
 
 ## Quick start
 

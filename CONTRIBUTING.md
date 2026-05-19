@@ -23,6 +23,7 @@ this file — see `AGENTS.md` and `CLAUDE.md` instead.
   skill/frontmatter presence and `python -m json.tool` for plugin manifests.
 - Do not reintroduce Node/TypeScript scaffolding unless a CI requirement
   actually depends on it.
+
 ## Multi-platform plugin manifests
 
 The repo ships manifests for five agent platforms. When adding or removing

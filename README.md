@@ -27,7 +27,7 @@ separately. Agents must use `onekey schema --list` and `onekey schema <cmd>`
 before choosing parameters; schema-backed capabilities include auth, BTC
 address types, Solana/SPL transfers, swaps, market reads, and security checks.
 If CLI help exposes hardware-device commands but `schema --list` omits them,
-treat that as a CLI schema bug and do not guess device parameters.
+treat that as a CLI schema gap and do not guess device parameters.
 
 ## Installation
 
