@@ -1,7 +1,6 @@
 ---
 name: onekey-security
 description: "Use when the user asks is this token safe, wants a honeypot check, security scan, simulate transaction, risk assessment, hardware wallet safety, App Transfer/App Transport Bot Wallet secret safety, seed/private-key exposure requests, 代币安全, 蜜罐检测, 安全审计, 硬件钱包安全, or 模拟交易. Do NOT use for token prices — use onekey-market. Do NOT use for swap execution — use onekey-swap. Do NOT use for wallet balances or transfers — use onekey-wallet."
-version: 0.3.0
 license: Apache-2.0
 metadata:
   author: OneKey

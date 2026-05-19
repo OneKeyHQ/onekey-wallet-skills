@@ -1,7 +1,6 @@
 ---
 name: onekey-market
 description: "Use when the user asks about token price, BTC/SOL market questions, trending tokens, search token, kline chart, candlestick data, trading volume, top holders, liquidity, token info, 代币价格, 热门代币, K线, BTC 行情, SOL 行情, or 搜索代币. Do NOT use for swap execution — use onekey-swap. Do NOT use for security audits — use onekey-security. Do NOT use for wallet balances or transfers — use onekey-wallet."
-version: 0.3.0
 license: Apache-2.0
 metadata:
   author: OneKey

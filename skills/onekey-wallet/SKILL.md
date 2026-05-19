@@ -1,7 +1,6 @@
 ---
 name: onekey-wallet
 description: "Use when the user asks to log in with OneKey App Transfer/App Transport Bot Wallet or hardware wallet, check balance/assets, receive or derive BTC/Solana addresses, send/transfer BTC/SOL/tokens, view history, check wallet status, 查余额, 登录钱包, 硬件钱包, 转账, 发送, 收款, 导入钱包, or 交易记录. Do NOT use for swap execution — use onekey-swap. Do NOT use for token prices or research — use onekey-market. Do NOT use for security audits — use onekey-security."
-version: 0.3.0
 license: Apache-2.0
 metadata:
   author: OneKey
