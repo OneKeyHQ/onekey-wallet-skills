@@ -1,17 +1,18 @@
 # OneKey Wallet — Agent Skills
 
 Skill collection for AI coding assistants operating the OneKey wallet CLI.
-Four skills cover wallet operations, swap execution, market research, and
+Four skills cover wallet operations, App Transfer/App Transport Bot Wallet login, hardware
+wallet sessions, BTC/Solana support, swap execution, market research, and
 security auditing.
 
 ## Available skills
 
 | Skill | Purpose | When to use |
 | --- | --- | --- |
-| `onekey-wallet` | Wallet balances, transfers, history, import/logout | User checks balance, sends or withdraws assets, views transaction history, imports a wallet, or logs out |
-| `onekey-swap` | Swap quotes, execution, bridges, swap status | User wants to swap, trade, buy, sell, convert tokens, or bridge cross-chain |
-| `onekey-market` | Token prices, trending, K-line, liquidity, holders, research | User asks for token prices, trending tokens, search, K-line, liquidity, holders, or market research |
-| `onekey-security` | Token audits, transaction simulation, risk review | User asks for honeypot check, token audit, approval safety, or transaction simulation |
+| `onekey-wallet` | Auth, App Transfer/App Transport, hardware wallet, balances, BTC/SOL transfers, history, receive/logout | User logs in with Bot Wallet App Transfer/App Transport or hardware wallet, checks balance, sends/withdraws assets, views transaction history, receives funds, derives BTC addresses, or logs out |
+| `onekey-swap` | Swap quotes, execution, BTC/SOL swaps, BTC sign-only PSBT, bridges, swap status | User wants to swap, trade, buy, sell, convert tokens, sign a BTC PSBT, or bridge cross-chain |
+| `onekey-market` | Token prices, trending, K-line, liquidity, holders, BTC metrics, Solana research | User asks for token prices, trending tokens, search, K-line, liquidity, holders, BTC metrics, or market research |
+| `onekey-security` | Token audits, transaction simulation, risk review, hardware/App Transfer/App Transport secret safety | User asks for honeypot check, token audit, approval safety, transaction simulation, hardware safety, or credential/secret safety |
 
 Each skill's `SKILL.md` defines domain rules, safety gates, and fast patterns.
 Each skill's `references/common.md` carries shared pre-flight, safety,
@@ -25,6 +26,10 @@ The `onekey` CLI is self-describing via JSON Schema — never guess parameters:
 - `onekey schema <cmd>` — JSON Schema for a command's input and output.
 - `onekey schema --all` — full command registry.
 - `onekey <cmd> --help` — command-specific usage help.
+
+If `onekey schema --list` omits a command that `onekey --help` exposes
+(e.g. hardware-device commands under `onekey device`), treat it as a CLI
+schema gap and do not guess device parameters.
 
 ## Quick start
 

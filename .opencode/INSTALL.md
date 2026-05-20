@@ -40,10 +40,10 @@ You should see four skill directories: `onekey-wallet`, `onekey-swap`,
 
 | Skill | When to use |
 | --- | --- |
-| `onekey-wallet` | Wallet balance, transfers, history, import/logout |
-| `onekey-swap` | Swap, trade, buy/sell, cross-chain bridge |
-| `onekey-market` | Token prices, trending, K-line, liquidity, holders |
-| `onekey-security` | Token audit, honeypot check, transaction simulation |
+| `onekey-wallet` | Auth, App Transfer/App Transport Bot Wallet login, hardware wallet, balance, BTC/SOL transfers, history, receive/logout |
+| `onekey-swap` | Swap, trade, buy/sell, BTC/SOL swap, BTC sign-only PSBT, cross-chain bridge |
+| `onekey-market` | Token prices, trending, K-line, liquidity, holders, BTC metrics, Solana token research |
+| `onekey-security` | Token audit, honeypot check, transaction simulation, approval risk, hardware/App Transfer/App Transport secret safety |
 
 ## Updating
 
